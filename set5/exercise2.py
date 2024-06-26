@@ -75,7 +75,21 @@ def italian_rules(word):
     else:
         return word
 
+def apply_rules(letter):
+    """Control the substitution.
 
+    You need to change these substitutions to make it work.
+
+    Hint: when guard == -1 return the letter.
+    """
+    if letter == "a":
+        return "bba"
+    elif letter == "b":
+        return "aob"
+    elif letter == "o":
+        return "oa"
+    else:
+        return letter
 def abba(source="abba", guard=3):
     """Recursively replace letters acording to the rules.
 
@@ -91,25 +105,15 @@ def abba(source="abba", guard=3):
     aobaobbbabbaoaaobbbaoaaobaobaobbba
                 and so on...
     """
-
-    def apply_rules(letter):
-        """Control the substitution.
-
-        You need to change these substitutions to make it work.
-
-        Hint: when guard == -1 return the letter.
-        """
-        if letter == "a":
-            return "a"
-        elif letter == "b":
-            return "b"
-        elif letter == "o":
-            return "o"
-        else:
-            return letter
-
-    # write the rest of the function here
-    pass
+    result = ""
+    for letter in source:
+        result+=apply_rules(letter)
+    guard -= 1
+    if guard >= 0:
+        return abba(result, guard)
+    else:
+        print(f"result:{source}")
+        return source
 
 
 def koch(t, order, size):
@@ -144,18 +148,21 @@ def draw_koch(drawing_method, steps_deep=4):
 
 
 def square_koch(t, order, size):
-    r"""Draw a koch curve with a square rather than a triangular point.
-
-           _
-    e.g. _| |_ rather than _/\_
-
-    Leave the turtle facing the same direction.
-
-    """
+    r"""Draw a koch curve with a square rather than a triangular point."""
     trace = ""
-    # write the rest of the function here.
+    if order == 0:  # The base case is just a straight line
+        t.forward(size)
+    else:
+        trace += square_koch(t, order - 1, size / 4)
+        t.left(90)
+        trace += square_koch(t, order - 1, size / 4)
+        t.right(90)
+        trace += square_koch(t, order - 1, size / 4)
+        t.right(90)
+        trace += square_koch(t, order - 1, size / 4)
+        t.left(90)
+        trace += square_koch(t, order - 1, size / 4)
     return str(order) + trace
-    pass
 
 
 def draw_square(steps=4):
@@ -169,10 +176,10 @@ def draw_pointy(steps=4):
 
 
 if __name__ == "__main__":
-    print(draw_koch(drawing_method=square_koch, steps_deep=2))
-    print(draw_koch(drawing_method=square_koch, steps_deep=3))
-    print(draw_koch(drawing_method=square_koch, steps_deep=4))
-    print(draw_koch(drawing_method=koch, steps_deep=2))
-    print("AB:", abba())
-    print("ID:", str(italian_dinner()))
+    # print(draw_koch(drawing_method=square_koch, steps_deep=2))
+    # print(draw_koch(drawing_method=square_koch, steps_deep=3))
+    # print(draw_koch(drawing_method=square_koch, steps_deep=4))
+    # print(draw_koch(drawing_method=koch, steps_deep=2))
+    print("AB:", abba("abba", 2))
+    # print("ID:", str(italian_dinner()))
     pass
