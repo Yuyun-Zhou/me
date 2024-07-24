@@ -10,51 +10,55 @@ import os
 import random
 import string
 import time
+from typing import Any
 import requests
-from typing import Dict, List
 
 
 def give_me_five() -> int:
     """Returns the integer five."""
-    return None
+    return 5
 
 
 def password_please() -> str:
     """Returns a string, 8 or more characters long, contains at
     least one upper case letter and one lowercase letter.
     TIP: don't put in a real password!"""
-    return None
+    return "Password is the password"
 
 
-def list_please() -> list:
+def list_please() -> list[Any]:
     """Returns a list, you can put anything in the list."""
-    return None
+    return ['a', 'p', 'p', 'l', 'e']
 
 
-def int_list_please() -> list:
+def int_list_please() -> list[int]:
     """Returns a list of integers, any integers are fine."""
-    return None
+    return [1, 1, 4, 5, 1, 1, 4]
 
 
-def string_list_please() -> list:
+def string_list_please() -> list[str]:
     """Returns a list of strings, any string are fine."""
-    return None
+    return ["abc", "def", "hello", "myname", "is", "delph"]
 
 
 def dictionary_please() -> dict:
     """Returns a dictionary, anything you like."""
-    return None
+    return {
+        "nice day": ["friends", "enjoy", "dinner"],
+        "work day": ["assignment", "lecture", "coding"]
+    }
 
 
 def is_it_5(some_number) -> bool:
     """Returns True if the argument passed is 5, otherwise returns False."""
-    well_is_it = None
+    well_is_it = some_number == 5
     return well_is_it
 
 
 def take_five(some_number) -> int:
     """Subtracts 5 from some_number."""
-    return None
+    return some_number - 5
+
 
 
 def greet(name="Towering Timmy") -> str:
@@ -63,7 +67,7 @@ def greet(name="Towering Timmy") -> str:
     E.g. if given as "Towering Timmy" it should
          return "Well hello, Towering Timmy"
     """
-    return None
+    return "Well hello, " + name
 
 
 def one_counter(input_list=[1, 4, 1, 5, 1, 1]) -> int:
@@ -71,8 +75,10 @@ def one_counter(input_list=[1, 4, 1, 5, 1, 1]) -> int:
     Return an integer.
     TIP: the test will use a different input_list, so don't just return 2
     """
-    count = None
-
+    count = 0
+    for num in input_list:
+        if num == 1:
+            count += 1
     return count
 
 
@@ -80,12 +86,14 @@ def n_counter(search_for_this, input_list=[1, 4, 1, 5, 1, 1]) -> int:
     """Count the number of times search_for_this shows up in the input_list.
     Return an integer.
     """
-    count = None
-
+    count = 0
+    for num in input_list:
+        if num == search_for_this:
+            count += 1
     return count
 
 
-def fizz_buzz() -> List:
+def fizz_buzz() -> list:
     """Do the fizzBuzz.
 
     This is the most famous basic programming test of all time!
@@ -104,8 +112,15 @@ def fizz_buzz() -> List:
          'FizzBuzz', 16, 17, ...]
     """
     fizz_buzz_list = []
-    # your code here
-
+    for i in range(1, 101):
+        if i % 3 == 0 and i % 5 == 0:
+            fizz_buzz_list.append("FizzBuzz")
+        elif i % 3 == 0:
+            fizz_buzz_list.append("Fizz")
+        elif i % 5 == 0:
+            fizz_buzz_list.append("Buzz")
+        else:
+            fizz_buzz_list.append(i)
     return fizz_buzz_list
 
 
@@ -120,11 +135,28 @@ def set_it_on_fire(input_string="very naughty boy") -> str:
     TIP: consider using the 'join' method in Python.
     TIP: make sure that you have a 🔥 on both ends of the string.
     """
+    result = ""
+    for char in input_string:
+        result += "🔥"
+        result += char.upper()
+    result += "🔥"
+    return result
 
-    return None
+
+def the_chain_gang_5(the_value) -> bool:
+    """Take the_value, subtract 5 from it, and return True if the value we end up with it 5.
+
+    You don't get anything for free this far into the quiz, you can't
+    use the == operator or the - operator, and you must use two of the
+    functions you've already written.
+
+    TIP: you've already written a function that returns True if the value is 5
+    TIP: you've already written a function that subtracts 5
+    """
+    return is_it_5(take_five(the_value))
 
 
-def pet_filter(letter="a") -> List:
+def pet_filter(letter="a") -> list:
     """Return a list of pets whose name contains the character 'letter'"""
     # fmt: off
     pets = [
@@ -138,7 +170,7 @@ def pet_filter(letter="a") -> List:
         "fancy rat and lab rat", "mink", "red fox", "hedgehog", "guppy"
     ]
     # fmt: on
-    filtered = []
+    filtered = [p for p in pets if letter in p]
 
     return filtered
 
@@ -155,11 +187,17 @@ def best_letter_for_pets() -> str:
 
     the_alphabet = string.ascii_lowercase
     most_popular_letter = ""
+    length = 0
+    for l in the_alphabet:
+        actural_l = len(pet_filter(l))
+        if actural_l > length:
+            length = actural_l
+            most_popular_letter = l
 
     return most_popular_letter
 
 
-def make_filler_text_dictionary() -> Dict:
+def make_filler_text_dictionary() -> dict:
     """Make a dictionary of random words filler text.
     There is a random word generator here:
     https://us-central1-waldenpondpress.cloudfunctions.net/give_me_a_word?wordlength=4
@@ -187,6 +225,14 @@ def make_filler_text_dictionary() -> Dict:
     url = "https://us-central1-waldenpondpress.cloudfunctions.net/give_me_a_word?wordlength="
     wd = {}
 
+    for length in range(3, 8):
+        words = []
+        for _ in range(4):
+            res = requests.get(url+f"{length}")
+            while res.status_code != 200:
+                res = requests.get(url+f"{length}")
+            words.append(res.text)
+        wd[length] = words
     return wd
 
 
@@ -205,7 +251,13 @@ def random_filler_text(number_of_words=200) -> str:
 
     words = []
 
-    return " ".join(words)
+    for _ in range(number_of_words):
+        word_length = random.randint(3, 7)
+        word_index = random.randint(0, 3)
+        words.append(my_dict[word_length][word_index])
+
+    returned =  " ".join(words)
+    return returned
 
 
 def fast_filler(number_of_words=200) -> str:
@@ -217,6 +269,7 @@ def fast_filler(number_of_words=200) -> str:
     the internet.
     Use the filename "dict_cache.json"
     TIP: you'll need the os and json libraries
+    TIP: This is making sentences. Make the first letter capital, and add a full stop to the end.
     TIP: you'll probably want to use json dumps and loads to get the
     dictionary into and out of the file. Be careful when you read it back in,
     it'll convert integer keys to strings.
@@ -224,8 +277,31 @@ def fast_filler(number_of_words=200) -> str:
     """
 
     fname = "dict_cache.json"
+    my_dict = {}
+    if os.path.exists(fname):
+        with open(fname, "r") as f:
+            js_dict = json.load(f)
+            for key,val in js_dict.items():
+                my_dict[int(key)] = val
+    else:
+        my_dict = make_filler_text_dictionary()
+        with open(fname, "w") as f:
+            json.dump(my_dict, f)
 
-    return None
+    words = []
+    for _ in range(int(number_of_words)):
+        word_length = random.randint(3, 7)
+        word_index = random.randint(0, 3)
+        words.append(my_dict[word_length][word_index])
+
+    returned =  " ".join(words)
+    if len(returned) > 1:
+        final_answer = returned[0].upper() + returned[1:] + "."
+    elif len(returned) > 0:
+        final_answer = returned[0].upper() + "."
+    else:
+        final_answer = "."
+    return final_answer
 
 
 if __name__ == "__main__":
@@ -249,13 +325,15 @@ if __name__ == "__main__":
     print("n_counter:", n_counter(7))
     print("fizz_buzz:", fizz_buzz())
     print("put_behind_bars:", set_it_on_fire())
+    print("chaing gang 5", the_chain_gang_5(5))
+    print("chaing gang 5", the_chain_gang_5(10))
     print("pet_filter:", pet_filter())
     print("best_letter_for_pets:", best_letter_for_pets())
     print("make_filler_text_dictionary:", make_filler_text_dictionary())
     print("random_filler_text:", random_filler_text())
     print("fast_filler:", fast_filler())
     for i in range(4):
-        print(i, fast_filler(number_of_words=20), "\n")
+        print(i, fast_filler(number_of_words=10), "\n")
     print(
         "These are mini tests, they show you some output.",
         "\nDon't forget to run the real tests.",
