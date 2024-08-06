@@ -65,7 +65,7 @@ def loops_1a():
     E.g.: ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*']
     """
     start_list = []
-    for i in range(8):
+    for i in range(10):
         start_list.append("*")
     return start_list
 
