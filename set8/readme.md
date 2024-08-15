@@ -5,3 +5,7 @@ my second interesting stuff is complete. I use the heat map to
 show the crash between different vehicles. And figure out that
 public transportation is safer, and the car is the most popular
 method among people for going out.
+
+Interestingly, mini-bike is the most safe vehicle in NSW.
+
+Cheers! :D
